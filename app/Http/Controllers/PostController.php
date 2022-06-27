@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Response as HttpResposne;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class PostController extends Controller
 {
@@ -48,6 +48,6 @@ class PostController extends Controller
     {
         $post->delete();
 
-        return response('', HttpResposne::HTTP_NO_CONTENT);
+        return response('', HttpResponse::HTTP_NO_CONTENT);
     }
 }
