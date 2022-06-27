@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -39,9 +40,7 @@ class PostController extends Controller
             }
         }
 
-        $posts = Post::get();
-
-        return $posts;
+        return PostResource::collection(Post::all());
     }
 
     /**
