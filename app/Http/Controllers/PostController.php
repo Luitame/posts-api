@@ -4,47 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
 use App\Models\Post;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+use App\Service\PostService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class PostController extends Controller
 {
-    const BASE_URI = 'https://www.scalablepath.com/api/test/';
+    private PostService $postService;
 
-    public function index()
+    public function __construct(PostService $postService)
     {
-        if (count(User::get()) == 0) {
-            $users = Http::get(self::BASE_URI . 'test-users')->json();
+        $this->postService = $postService;
+    }
 
-            foreach ($users as $user) {
-                User::create([
-                    'id' => $user['id'],
-                    'name' => $user['name'],
-                    'email' => $user['email'],
-                    'username' => $user['username'],
-                    'password' => Hash::make(Str::uuid()),
-                ]);
-            }
-
-            $posts = Http::get(self::BASE_URI . 'test-posts')->json();
-
-            foreach ($posts as $post) {
-                Post::create([
-                    'id' => $post['id'],
-                    'title' => $post['title'],
-                    'body' => $post['body'],
-                    'user_id' => $post['userId'],
-                ]);
-            }
-        }
+    public function index(): AnonymousResourceCollection
+    {
+        $this->postService->getScalablePathContent();
 
         return PostResource::collection(Post::all());
     }
 
-    public function destroy(Post $post)
+    public function destroy(Post $post): Response|Application|ResponseFactory
     {
         $post->delete();
 
