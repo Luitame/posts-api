@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response as HttpResposne;
 
 class PostController extends Controller
 {
@@ -43,14 +44,10 @@ class PostController extends Controller
         return PostResource::collection(Post::all());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+
+        return response('', HttpResposne::HTTP_NO_CONTENT);
     }
 }
